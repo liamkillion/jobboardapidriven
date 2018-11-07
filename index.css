@@ -1,0 +1,18 @@
+body {
+  padding: 10px 0px 0px 10px
+}
+
+#jobs-by-office {
+  padding-left: 20px
+}
+
+#jobs-by-department {
+  padding-left: 20px
+}
+
+code {
+  background-color: #eee;
+  border: 1px solid #999;
+  display: block;
+  padding: 20px;
+}
