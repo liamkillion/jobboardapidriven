@@ -16,3 +16,8 @@ code {
   display: block;
   padding: 20px;
 }
+
+.comment{
+  color:red;
+  font-weight: bold;
+}

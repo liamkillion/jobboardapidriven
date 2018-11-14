@@ -2,18 +2,18 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Example Option 4 Job Board</title>
+    <title>Example Option 5 Job Board</title>
     <link rel="stylesheet" href="./index.css">
   </head>
   <body>
-    <h1>The API-Powered Job Board w/ Embedded Application Forms</h1>
+    <h1>The Completely API-Powered Job Board</h1>
     <h2>Current Job Openings By City:</h2>
     <div id="jobs-by-office">
     </div>
     <h2>Current Job Openings By Department:</h2>
     <div id="jobs-by-department">
     </div>
-    <h1>How it's done</h1>
+    <h1>An example of how to:</h1>
     <p>Add the following to your careers page:</p>
     <pre>
       <code>
@@ -39,83 +39,83 @@
         let departments_url = "https://api.greenhouse.io/v1/boards/cardboard/departments?content=true"
         let jobs_url = "https://api.greenhouse.io/v1/boards/cardboard/jobs?content=true"
 
-        // make a call to the offices endpoint
+        <span class="comment">// make a GET request to the Greenhouse Job Board API offices endpoint, and then for each office</span>
         fetch(offices_url).then(resp=>resp.json()).then(data=>data['offices']).then(offices=>{
           offices.forEach(office=>{
-            // exclude offices w/o a name (presumes all jobs will be assigned to an office)
+            <span class="comment">// exclude jobs w/ No Office</span>
             if (office['name']!=="No Office"){
-              // generate header element for each office
+              <span class="comment">// generate header element</span>
               let h3 = document.createElement('h3')
-              // give the office header an id matching the office ID
+              <span class="comment">// give header id of office name</span>
               h3.setAttribute('id',`${office['name']}-header`)
-              // set the text of the header to be the office name
+              <span class="comment">// set header text to office name</span>
               h3.innerHTML=office['name']
-              // add the office name hadder under the "jobs by office" section
+              <span class="comment">// add header under the right section of the page</span>
               document.getElementById('jobs-by-office').appendChild(h3)
-              // create an unordered list under the office header
+              <span class="comment">// create unordered list element</span>
               let ul = document.createElement('ul')
-              // give unordered list an id of the office name
+              <span class="comment">// give unordered list an id of the office name</span>
               ul.setAttribute('id',`${office['name']}`)
-              // attach unordered list under the corresponding office header
+              <span class="comment">// attach unordered list under the corresponding office header</span>
               document.getElementById(`${office['name']}-header`).appendChild(ul)
             }
           })
-          // make a GET request to the Greenhouse Job Board API jobs endpoint, and then for each job post
+          <span class="comment">// make a GET request to the Greenhouse Job Board API jobs endpoint, and then for each job post</span>
           fetch(jobs_url).then(resp=>resp.json()).then(data=>data['jobs']).then(jobs=>{
             jobs.forEach(job=>{
-              // create list item
+              <span class="comment">// create list item</span>
               let li = document.createElement('li')
-              // set list item to be links to job post
-              li.innerHTML = (`&#60;a href='./job.html?gh_jid=${job['id']}'&#62;${job['title']}&#60;/a&#62;`)
-              // find and add the list item to the corresponding unordered list for each office
+              <span class="comment">// set list item to be links to job post</span>
+              li.innerHTML = (`&#60;a href=${job['absolute_url']}&#62;${job['title']}&#60;/a&#62;`)
+              <span class="comment">// find and add the list item to the corresponding unordered list for each office</span>
               let office_ul = document.getElementById(`${job['offices'][0]['name']}`)
               office_ul.appendChild(li)
             })
           })
         })
 
-        // make a GET request to the Greenhouse Job Board API departments endpoint, and then for each department
+        <span class="comment">// make a GET request to the Greenhouse Job Board API departments endpoint, and then for each department</span>
         fetch(departments_url).then(resp=>resp.json()).then(data=>data['departments']).then(departments=>{
           departments.forEach(department=>{
-            // exclude jobs w/ No Department
+            <span class="comment">// exclude jobs w/ No Department</span>
             if(department['name']!=="No Department"){
-              // generate headers element
+              <span class="comment">// generate headers element</span>
               let h3 = document.createElement('h3')
-              // give header id of department name
+              <span class="comment">// give header id of department name</span>
               h3.setAttribute('id',`${department['name']}-header`)
-              // set header text to department name
+              <span class="comment">// set header text to department name</span>
               h3.innerHTML=department['name']
-              // add header under the right section of the page
+              <span class="comment">// add header under the right section of the page</span>
               document.getElementById('jobs-by-department').appendChild(h3)
-              // create an unordered list
+              <span class="comment">// create an unordered list</span>
               let ul = document.createElement('ul')
-              // give unordered list an id of the department name
+              <span class="comment">// give unordered list an id of the department name</span>
               ul.setAttribute('id',`${department['name']}`)
-              // attach unordered list under the corresponding department header
+              <span class="comment">// attach unordered list under the corresponding department header</span>
               document.getElementById(`${department['name']}-header`).appendChild(ul)
             }
           })
-          // make a GET request to the Greenhouse Job Board API jobs endpoint, and then for each job post
+          <span class="comment">// make a GET request to the Greenhouse Job Board API jobs endpoint, and then for each job post</span>
           fetch(jobs_url).then(resp=>resp.json()).then(data=>data['jobs']).then(jobs=>{
             jobs.forEach(job=>{
-              // create list item
+              <span class="comment">// create list item</span>
               let li = document.createElement('li')
-              // set list item to be links to job post
-              li.innerHTML = (`&#60;a href='./job.html?gh_jid=${job['id']}'&#62;${job['title']}&#60;/a&#62;`)
-              // find and add the list item to the corresponding unordered list for each department
+              <span class="comment">// set list item to be links to job post</span>
+              li.innerHTML = (`&#60;a href=${job['absolute_url']}&#62;${job['title']}&#60;/a&#62;`)
+              <span class="comment">// find and add the list item to the corresponding unordered list for each department</span>
               let dept_ul = document.getElementById(`${job['departments'][0]['name']}`)
               dept_ul.appendChild(li)
             })
-            // add placeholder for offices/departments that have no job posts
-            // create an array of unordered lists, and for each list
+            <span class="comment">// add placeholder for offices/departments that have no job posts</span>
+            <span class="comment">// create an array of unordered lists, and for each list</span>
             Array.from(document.getElementsByTagName('ul')).forEach(ul=>{
-              // if the unordered list has no child elements
+              <span class="comment">// if they have no child elements (list items w/ links to job posts, as generated above)</span>
               if(ul.childElementCount===0){
-                // create list item
+                <span class="comment">// create list item</span>
                 let li=document.createElement('li')
-                // set list item text to be "No openings at this time"
+                <span class="comment">// set list item text to be "No openings at this time"</span>
                 li.innerHTML="No openings at this time"
-                // add list item to the previously-identified empty list
+                <span class="comment">// add list item to the previously-identified empty list</span>
                 ul.appendChild(li)
               }
             })
