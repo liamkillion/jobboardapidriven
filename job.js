@@ -12,14 +12,14 @@ fetch(job_url).then(response=>response.json()).then(job_object=>{
   office.innerHTML = job_object['location']['name']
   document.getElementById('job-post-office').appendChild(office)
   // <div id="job-post-description"></div>
-  let description = document.createElement('p')
-  description.innerHTML = job_object['content']
-  document.getElementById('job-post-description').appendChild(description)
+  document.getElementById('job-post-description').innerHTML=job_object['content'].replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&#39;/g,"'")
   // <div id="job-post-form"></div>
   let form = document.createElement('form')
+  form.setAttribute('id','form')
   document.getElementById('job-post-form').appendChild(form)
-  job_object.forEach(question=>{
+  job_object['questions'].forEach(question=>{
     let input = document.createElement('input')
+    input.setAttribute('style','display:inline')
     if (question['fields'][0]['type']==='input_file'){
       input.setAttribute('type','file')
     } else if (question['fields'][0]['type']==='input_text') {
@@ -33,5 +33,10 @@ fetch(job_url).then(response=>response.json()).then(job_object=>{
     } else if (question['fields'][0]['type']==='multi_value_multi_select') {
       // need to write for the diff values
     }
+    let label = document.createElement('label')
+    label.setAttribute('for',question['label'])
+    label.innerHTML = question['label']
+    label.appendChild(input)
+    document.getElementById('form').appendChild(label)
   })
 })
