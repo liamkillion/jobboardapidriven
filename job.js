@@ -17,26 +17,92 @@ fetch(job_url).then(response=>response.json()).then(job_object=>{
   let form = document.createElement('form')
   form.setAttribute('id','form')
   document.getElementById('job-post-form').appendChild(form)
+  // job_object['questions'].forEach(question=>{
+  //   let input = document.createElement('input')
+  //   input.setAttribute('style','display:inline')
+  //   if (question['fields'][0]['type']==='input_file'){
+  //     input.setAttribute('type','file')
+  //   } else if (question['fields'][0]['type']==='input_text') {
+  //     input.setAttribute('type','text')
+  //   } else if (question['fields'][0]['type']==='input_hidden') {
+  //     input.setAttribute('type','hidden')
+  //   } else if (question['fields'][0]['type']==='textarea') {
+  //     input.setAttribute('type','text')
+  //   } else if (question['fields'][0]['type']==='multi_value_single_select') {
+  //     question['fields'][0]['values'].each(value=>{})
+  //   } else if (question['fields'][0]['type']==='multi_value_multi_select') {
+  //     // need to write for the diff values
+  //   }
+  //   let label = document.createElement('label')
+  //   label.setAttribute('for',question['label'])
+  //   label.innerHTML = question['label']
+  //   label.appendChild(input)
+  //   document.getElementById('form').appendChild(label)
+  // })
   job_object['questions'].forEach(question=>{
-    let input = document.createElement('input')
-    input.setAttribute('style','display:inline')
     if (question['fields'][0]['type']==='input_file'){
+      let input = document.createElement('input')
+      input.setAttribute('style','display:inline')
       input.setAttribute('type','file')
+      let label = document.createElement('label')
+      label.setAttribute('for',question['label'])
+      label.innerHTML = question['label']
+      label.appendChild(input)
+      document.getElementById('form').appendChild(label)
     } else if (question['fields'][0]['type']==='input_text') {
+      let input = document.createElement('input')
+      input.setAttribute('style','display:inline')
       input.setAttribute('type','text')
+      let label = document.createElement('label')
+      label.setAttribute('for',question['label'])
+      label.innerHTML = question['label']
+      label.appendChild(input)
+      document.getElementById('form').appendChild(label)
     } else if (question['fields'][0]['type']==='input_hidden') {
+      let input = document.createElement('input')
+      input.setAttribute('style','display:inline')
       input.setAttribute('type','hidden')
+      let label = document.createElement('label')
+      label.setAttribute('for',question['label'])
+      label.innerHTML = question['label']
+      label.appendChild(input)
+      document.getElementById('form').appendChild(label)
     } else if (question['fields'][0]['type']==='textarea') {
+      let input = document.createElement('input')
+      input.setAttribute('style','display:inline')
       input.setAttribute('type','text')
+      let label = document.createElement('label')
+      label.setAttribute('for',question['label'])
+      label.innerHTML = question['label']
+      label.appendChild(input)
+      document.getElementById('form').appendChild(label)
     } else if (question['fields'][0]['type']==='multi_value_single_select') {
-      // need to write for the diff values
+      question['fields'][0]['values'].each(value=>{
+        let input = document.createElement('input')
+        input.setAttribute('style','display:inline')
+        input.setAttribute('type','radio')
+        input.setAttribute('value',value['value'])
+        input.setAttribute('name',question['fields']['name'])
+      })
     } else if (question['fields'][0]['type']==='multi_value_multi_select') {
       // need to write for the diff values
     }
-    let label = document.createElement('label')
-    label.setAttribute('for',question['label'])
-    label.innerHTML = question['label']
-    label.appendChild(input)
-    document.getElementById('form').appendChild(label)
   })
 })
+
+const API_ROOT="http://localhost:3000/api/v1"
+const getHeaders = () => {
+  return {
+    "Content-Type": "application/json",
+    Accept: "application/json"
+  };
+}
+
+const createNewJobApp = newJobApp => {
+  debugger
+  return fetch(`${API_ROOT}`, {
+    method: "POST",
+    headers: getHeaders(),
+    body: JSON.stringify(newJobApp)
+  }).then(res => res.json());
+}

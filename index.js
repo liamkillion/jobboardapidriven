@@ -1,6 +1,8 @@
 let offices_url = "https://api.greenhouse.io/v1/boards/cardboard/offices?content=true"
 let departments_url = "https://api.greenhouse.io/v1/boards/cardboard/departments?content=true"
 let jobs_url = "https://api.greenhouse.io/v1/boards/cardboard/jobs?content=true"
+let urlParams = new URLSearchParams(window.location.search)
+let referral_token = (urlParams.get('gh_src')
 
 // make a call to the offices endpoint
 fetch(offices_url).then(resp=>resp.json()).then(data=>data['offices']).then(offices=>{
@@ -28,8 +30,12 @@ fetch(offices_url).then(resp=>resp.json()).then(data=>data['offices']).then(offi
     jobs.forEach(job=>{
       // create list item
       let li = document.createElement('li')
-      // set list item to be links to job post
-      li.innerHTML = (`<a href='./job.html?gh_jid=${job['id']}'>${job['title']}</a>`)
+      // set list item to be links to job post, depending on whether there is a referral token
+      if (referral_token!=''){
+        li.innerHTML = (`<a href='./job.html?gh_jid=${job['id']}&gh_src=${referral_token}'>${job['title']}</a>`)
+      } else {
+        li.innerHTML = (`<a href='./job.html?gh_jid=${job['id']}'>${job['title']}</a>`)
+      }
       // find and add the list item to the corresponding unordered list for each office
       let office_ul = document.getElementById(`${job['offices'][0]['name']}`)
       office_ul.appendChild(li)
@@ -63,8 +69,12 @@ fetch(departments_url).then(resp=>resp.json()).then(data=>data['departments']).t
     jobs.forEach(job=>{
       // create list item
       let li = document.createElement('li')
-      // set list item to be links to job post
-      li.innerHTML = (`<a href='./job.html?gh_jid=${job['id']}'>${job['title']}</a>`)
+      // set list item to be links to job post, depending on whether there is a referral token
+      if (referral_token!=''){
+        li.innerHTML = (`<a href='./job.html?gh_jid=${job['id']}&gh_src=${referral_token}'>${job['title']}</a>`)
+      } else {
+        li.innerHTML = (`<a href='./job.html?gh_jid=${job['id']}'>${job['title']}</a>`)
+      }
       // find and add the list item to the corresponding unordered list for each department
       let dept_ul = document.getElementById(`${job['departments'][0]['name']}`)
       dept_ul.appendChild(li)
