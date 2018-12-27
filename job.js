@@ -77,15 +77,33 @@ fetch(job_url).then(response=>response.json()).then(job_object=>{
       label.appendChild(input)
       document.getElementById('form').appendChild(label)
     } else if (question['fields'][0]['type']==='multi_value_single_select') {
+      let multi_value_single_select = document.createElement('div')
       question['fields'][0]['values'].each(value=>{
         let input = document.createElement('input')
         input.setAttribute('style','display:inline')
         input.setAttribute('type','radio')
         input.setAttribute('value',value['value'])
         input.setAttribute('name',question['fields']['name'])
+        let label = document.createElement('label')
+        label.setAttribute('for',value['label'])
+        label.innerHTML = value['label']
+        label.appendChild(input)
+        multi_value_single_select.appendChild(label)
       })
     } else if (question['fields'][0]['type']==='multi_value_multi_select') {
-      // need to write for the diff values
+      let multi_value_multi_select = document.createElement('div')
+      question['fields'][0]['values'].each(value=>{
+        let input = document.createElement('input')
+        input.setAttribute('style','display:inline')
+        input.setAttribute('type','checkbox')
+        input.setAttribute('value',value['value'])
+        input.setAttribute('name',question['fields']['name'])
+        let label = document.createElement('label')
+        label.setAttribute('for',value['label'])
+        label.innerHTML = value['label']
+        label.appendChild(input)
+        multi_value_multi_select.appendChild(label)
+      })
     }
   })
 })
