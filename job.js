@@ -74,40 +74,56 @@ fetch(job_url).then(response=>response.json()).then(job_object=>{
       form_group.appendChild(label)
       document.getElementById('job-post-form').appendChild(form_group)
     } else if (question['fields'][0]['type']==='multi_value_single_select') {
-      let form_group = document.createElement('div')
-      form_group.setAttribute('class','form-group')
+      let form_check_batch = document.createElement('div')
       let p = document.createElement('p')
       p.innerHTML = question['label']
-      form_group.appendChild(p)
+      form_check_batch.appendChild(p)
       question['fields'][0]['values'].forEach(value=>{
-        debugger
+        let form_check = document.createElement('div')
+        form_check.setAttribute('class','form-check')
         let input = document.createElement('input')
         input.setAttribute('type','radio')
-        input.setAttribute('class','form-control')
-        input.setAttribute('id',question['label'])
+        input.setAttribute('class','form-check-input')
+        input.setAttribute('id',value['label'])
+        input.setAttribute('name',question['label'])
         let label = document.createElement('label')
+        label.setAttribute('class','form-check-label')
         label.setAttribute('for',value['label'])
         label.innerHTML = value['label']
-        label.appendChild(input)
-        form_group.appendChild(label)
+        form_check.appendChild(input)
+        form_check.appendChild(label)
+        form_check_batch.appendChild(form_check)
       })
-      document.getElementById('job-post-form').appendChild(form_group)
+      document.getElementById('job-post-form').appendChild(form_check_batch)
     } else if (question['fields'][0]['type']==='multi_value_multi_select') {
-      let form_group = document.createElement('div')
+      let form_check_batch = document.createElement('div')
+      let p = document.createElement('p')
+      p.innerHTML = question['label']
+      form_check_batch.appendChild(p)
       question['fields'][0]['values'].forEach(value=>{
+        let form_check = document.createElement('div')
+        form_check.setAttribute('class','form-check')
         let input = document.createElement('input')
         input.setAttribute('type','checkbox')
-        input.setAttribute('class','form-control')
-        input.setAttribute('id',question['label'])
+        input.setAttribute('class','form-check-input')
+        input.setAttribute('id',value['label'])
+        input.setAttribute('name',question['label'])
         let label = document.createElement('label')
+        label.setAttribute('class','form-check-label')
         label.setAttribute('for',value['label'])
         label.innerHTML = value['label']
-        label.appendChild(input)
-        form_group.appendChild(label)
+        form_check.appendChild(input)
+        form_check.appendChild(label)
+        form_check_batch.appendChild(form_check)
       })
-      document.getElementById('job-post-form').appendChild(form_group)
+      document.getElementById('job-post-form').appendChild(form_check_batch)
     }
-  })
+  })  
+  let button = document.createElement('button')
+  button.setAttribute('type','submit')
+  button.setAttribute('class','btn btn-primary')
+  button.innerHTML="Submit"
+  document.getElementById('job-post-form').appendChild(button)
 })
 
 // const API_ROOT="http://localhost:3000/api/v1"
