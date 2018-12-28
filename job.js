@@ -14,11 +14,12 @@ fetch(job_url).then(response=>response.json()).then(job_object=>{
   // <div id="job-post-description"></div>
   document.getElementById('job-post-description').innerHTML=job_object['content'].replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&#39;/g,"'")
   // <form id="job-post-form"></form>
-  // <div class="form-group">
-  //  <label for="exampleInputEmail1">Email address</label>
-  //  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-  //  <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-  // </div>
+  // bootstrap structure of a question:
+  ////<div class="form-group">
+  ////  <label for="exampleInputEmail1">Email address</label>
+  ////  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+  ////  <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+  ////</div>
   job_object['questions'].forEach(question=>{
     if (question['fields'][0]['type']==='input_file'){
       let form_group = document.createElement('div')
@@ -75,7 +76,11 @@ fetch(job_url).then(response=>response.json()).then(job_object=>{
     } else if (question['fields'][0]['type']==='multi_value_single_select') {
       let form_group = document.createElement('div')
       form_group.setAttribute('class','form-group')
-      question['fields'][0]['values'].each(value=>{
+      let p = document.createElement('p')
+      p.innerHTML = question['label']
+      form_group.appendChild(p)
+      question['fields'][0]['values'].forEach(value=>{
+        debugger
         let input = document.createElement('input')
         input.setAttribute('type','radio')
         input.setAttribute('class','form-control')
@@ -86,19 +91,21 @@ fetch(job_url).then(response=>response.json()).then(job_object=>{
         label.appendChild(input)
         form_group.appendChild(label)
       })
+      document.getElementById('job-post-form').appendChild(form_group)
     } else if (question['fields'][0]['type']==='multi_value_multi_select') {
-      let multi_value_multi_select = document.createElement('div')
-      question['fields'][0]['values'].each(value=>{
+      let form_group = document.createElement('div')
+      question['fields'][0]['values'].forEach(value=>{
         let input = document.createElement('input')
         input.setAttribute('type','checkbox')
-        input.setAttribute('value',value['value'])
-        input.setAttribute('name',question['fields']['name'])
+        input.setAttribute('class','form-control')
+        input.setAttribute('id',question['label'])
         let label = document.createElement('label')
         label.setAttribute('for',value['label'])
         label.innerHTML = value['label']
         label.appendChild(input)
-        multi_value_multi_select.appendChild(label)
+        form_group.appendChild(label)
       })
+      document.getElementById('job-post-form').appendChild(form_group)
     }
   })
 })
