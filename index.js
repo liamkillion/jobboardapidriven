@@ -2,7 +2,7 @@ let offices_url = "https://api.greenhouse.io/v1/boards/cardboard/offices?content
 let departments_url = "https://api.greenhouse.io/v1/boards/cardboard/departments?content=true"
 let jobs_url = "https://api.greenhouse.io/v1/boards/cardboard/jobs?content=true"
 let urlParams = new URLSearchParams(window.location.search)
-let referral_token = (urlParams.get('gh_src')
+let referral_token = urlParams.get('gh_src')
 
 // make a call to the offices endpoint
 fetch(offices_url).then(resp=>resp.json()).then(data=>data['offices']).then(offices=>{
