@@ -10,8 +10,151 @@
     <div id="job-post-title"></div>
     <div id="job-post-office"></div>
     <div id="job-post-description"></div>
-    <form id="job-post-form">      
-    </form>
+    <form id="job-post-form"></form>
+    <h1>An example of how to:</h1>
+    <p>Add the following to your job post page:</p>
+    <pre>
+      <code>
+        &#60;div id="job-post-title"&#62;&#60;/div&#62;
+        &#60;div id="job-post-office"&#62;&#60;/div&#62;
+        &#60;div id="job-post-description"&#62;&#60;/div&#62;
+        &#60;form id="job-post-form"&#62;&#60;/form&#62;
+        &#60;div id="grnhse_app"&#62;&#60;/div&#62;
+        &#60;script src="https://boards.greenhouse.io/embed/job_board/js?for=cardboard"&#62;&#60;/script&#62;
+      </code>
+    </pre>
+    <p>Add the following to your javascript file:</p>
+    <pre>
+      <code>
+        <span class="comment">// grab the URL of the job post page</span>
+        let url = location.href.split("/")
+        <span class="comment">// parse the URL for the job ID</span>
+        let jobID = location.href.split("/")[url.length-1].split("=")[1]
+        <span class="comment">//construct the URL for making GET Retrieve Job endpoint using the jobID, including the questions=true querystring parameter</span>
+        let job_url = `https://api.greenhouse.io/v1/boards/cardboard/jobs/${jobID}?questions=true`
+        <span class="comment">// make a call to the GET Retrieve Job endpoint</span>
+        fetch(job_url).then(response=>response.json()).then(job_object=>{
+          <span class="comment">// Generate a header element</span>
+          let title = document.createElement('h2')
+          <span class="comment">// set the text of the header to be the job post title</span>
+          title.innerHTML = job_object['title']
+          <span class="comment">// add the job post title under the corresponding div</span>
+          document.getElementById('job-post-title').appendChild(title)
+          <span class="comment">// Generate a header element</span>
+          let office = document.createElement('h5')
+          <span class="comment">// set the text of the header to be the location for the job post</span>
+          office.innerHTML = job_object['location']['name']
+          <span class="comment">// add the job post location under the corresponding div</span>
+          document.getElementById('job-post-office').appendChild(office)
+          <span class="comment">// the job post description comes with HTML tags, but with elements in unicode.  This replaces the unicode and drops it into the div so that it appears as html in the browser</span>
+          document.getElementById('job-post-description').innerHTML=job_object['content'].replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&#39;/g,"'")
+          <span class="comment">// For reference, here is the bootstrap structure of a question:</span>
+          <span class="comment">////&#60;div class="form-group"&#62;</span>
+          <span class="comment">////  &#60;label for="exampleInputEmail1"&#62;Email address&#60;/label&#62;</span>
+          <span class="comment">////  &#60;input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"&#62;</span>
+          <span class="comment">////  &#60;small id="emailHelp" class="form-text text-muted"&#62;We'll never share your email with anyone else.&#60;/small&#62;</span>
+          <span class="comment">////&#60;/div&#62;</span>
+          job_object['questions'].forEach(question=>{
+            <span class="comment">// helper method for building single response inputs</span>
+            function constructQuestionByType(questionType){
+              <span class="comment">// create a div  element for containing the input and label</span>
+              let form_group = document.createElement('div')
+              <span class="comment">// give the div the boostrap class</span>
+              form_group.setAttribute('class','form-group')
+              <span class="comment">// create an input element</span>
+              let input = document.createElement('input')
+              <span class="comment">// set the input's type to the function's argument</span>
+              input.setAttribute('type',questionType)
+              <span class="comment">// give the input the boostrap class</span>
+              input.setAttribute('class','form-control')
+              <span class="comment">// give the input a unique ID</span>
+              input.setAttribute('id',question['label'])
+              <span class="comment">// create an label element</span>
+              let label = document.createElement('label')
+              <span class="comment">// setting for attribute of label to match input</span>
+              label.setAttribute('for',question['label'])
+              <span class="comment">// set the label's text to match the value</span>
+              label.innerHTML = question['label']
+              <span class="comment">// add the input as a child of the label</span>
+              label.appendChild(input)
+              <span class="comment">// add the label as a child of the div</span>
+              form_group.appendChild(label)
+              <span class="comment">// add the  div to the target form div</span>
+              document.getElementById('job-post-form').appendChild(form_group)
+            }
+
+            <span class="comment">// helper method for building multiple response inputs</span>
+            function constructMultipleResponseValueQuestion(questionType){
+              <span class="comment">// create a div element for containing the form-check divs, label and multi/single select values</span>
+              let form_check_batch = document.createElement('div')
+              <span class="comment">// add a paragraph element tag for the question</span>
+              let p = document.createElement('p')
+              <span class="comment">// set the p tag's text to be the question</span>
+              p.innerHTML = question['label']
+              <span class="comment">// add the p tag to the div</span>
+              form_check_batch.appendChild(p)
+            <span class="comment">// for each multi/single select value for the question, do the following</span>
+              question['fields'][0]['values'].forEach(value=>{
+                <span class="comment">// create a div  element for containing the input and label</span>
+                let form_check = document.createElement('div')
+                <span class="comment">// give the div the boostrap class</span>
+                form_check.setAttribute('class','form-check')
+                <span class="comment">// create an input element</span>
+                let input = document.createElement('input')
+                <span class="comment">// set the input's type to the function's argument</span>
+                input.setAttribute('type',questionType)
+                <span class="comment">// give the input the boostrap class</span>
+                input.setAttribute('class','form-check-input')
+                <span class="comment">// give the input a unique ID</span>
+                input.setAttribute('id',value['label'])
+                <span class="comment">// give the input a collective "name"</span>
+                input.setAttribute('name',question['label'])
+                <span class="comment">// create an label element</span>
+                let label = document.createElement('label')
+                <span class="comment">// give the label the boostrap class</span>
+                label.setAttribute('class','form-check-label')
+                <span class="comment">// setting for attribute of label to match input</span>
+                label.setAttribute('for',value['label'])
+                <span class="comment">// set the label's text to match the value</span>
+                label.innerHTML = value['label']
+                <span class="comment">// add the input as a child of the form_check</span>
+                form_check.appendChild(input)
+                <span class="comment">// add the label as a child of the form_check</span>
+                form_check.appendChild(label)
+                <span class="comment">// add the form_check as a child of the batch div</span>
+                form_check_batch.appendChild(form_check)
+              })
+              document.getElementById('job-post-form').appendChild(form_check_batch)
+            }
+            <span class="comment">// now, with helper methods defined, we can loop through the questions and create inputs accordingly</span>
+            if (question['fields'][0]['type']==='input_file'){
+              constructQuestionByType('file')
+            } else if (question['fields'][0]['type']==='input_text') {
+              constructQuestionByType('text')
+            } else if (question['fields'][0]['type']==='input_hidden') {
+              constructQuestionByType('hidden')
+            } else if (question['fields'][0]['type']==='textarea') {
+              constructQuestionByType('text')
+            } else if (question['fields'][0]['type']==='multi_value_single_select') {
+              constructMultipleResponseValueQuestion('radio')
+            } else if (question['fields'][0]['type']==='multi_value_multi_select') {
+              constructMultipleResponseValueQuestion('checkbox')
+            }
+          })
+          <span class="comment">// create a button element</span>
+          let button = document.createElement('button')
+          <span class="comment">// set the button's type to submit</span>
+          button.setAttribute('type','submit')
+          <span class="comment">// set the button's bootstrap class</span>
+          button.setAttribute('class','btn btn-primary')
+          <span class="comment">// make the button say submit</span>
+          button.innerHTML="Submit"
+          <span class="comment">// add the button to the target div (done last so it is at the bottom)</span>
+          document.getElementById('job-post-form').appendChild(button)
+        })
+        <span class="comment">// a similar process can be done for demographic and EEOC questions, also contained in the response.</span>
+      </code>
+    </pre>
     <script src="./job.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
